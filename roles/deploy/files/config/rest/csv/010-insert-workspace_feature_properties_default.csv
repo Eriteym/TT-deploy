@@ -1,0 +1,11 @@
+ID,WORKSPACE_ID,CATEGORY,KEY,VALUE
+7d7f4342-3f74-11eb-b378-0242ac130002,null,timeentry,timeentry.allowDisable,false
+b86869c0-3f74-11eb-b378-0242ac130002,null,timeentry,timeentry.dateLimitation.enabled,true
+bc0e7204-3f74-11eb-b378-0242ac130002,null,timeentry,timeentry.dateLimitation.days,7
+bee28d30-3f74-11eb-b378-0242ac130002,null,timeentry,timeentry.durationLimitation.enabled,true
+c3f00c6c-3f74-11eb-b378-0242ac130002,null,timeentry,timeentry.durationLimitation.hours,28800
+a3d4983d-4432-42ba-9547-cd3fbfa90a88,null,timeentry,timeentry.expirationPeriod,1800
+c80e9de0-3f74-11eb-b378-0242ac130002,null,timeentry,timeentry.requiredFields,null
+cb8ecf94-3f74-11eb-b378-0242ac130002,null,project,project.allowDisable,true
+d050ed50-3f74-11eb-b378-0242ac130002,null,products,products.enabled,false
+d488304a-3f74-11eb-b378-0242ac130002,null,workspace,workspace.allowCreate,false

@@ -1,0 +1,343 @@
+{
+  "pages": [
+    {
+      "key": "global",
+      "title": "Global configuration",
+      "icon": "globe",
+      "forms": [
+        {
+          "key": "configuration.smtp",
+          "title": "SMTP options",
+          "properties": [
+            {
+              "application": "application",
+              "key": "spring.mail.host",
+              "title": "SMTP server address",
+              "default": "mail.startext.dev",
+              "placeholder": "mail.startext.dev"
+            },
+            {
+              "application": "application",
+              "key": "spring.mail.properties.mail.smtp.ssl.enable",
+              "title": "SMTP enable SSL",
+              "default": "true",
+              "placeholder": "true"
+            },
+            {
+              "application": "application",
+              "key": "spring.mail.properties.mail.smtp.starttls.enabled",
+              "title": "SMTP start TLS",
+              "default": "true",
+              "placeholder": "true"
+            },
+            {
+              "application": "application",
+              "key": "spring.mail.port",
+              "title": "SMTP port",
+              "default": "465",
+              "placeholder": "465"
+            },
+            {
+              "application": "application",
+              "key": "spring.mail.properties.mail.from",
+              "title": "SMTP mail from",
+              "default": "rdm@startext.de",
+              "placeholder": "rdm@startext.de"
+            },
+            {
+              "application": "application",
+              "key": "spring.mail.properties.mail.smtp.auth",
+              "title": "SMTP enable authentication",
+              "default": "true",
+              "placeholder": "true"
+            },
+            {
+              "application": "application",
+              "key": "spring.mail.username",
+              "title": "SMTP user name",
+              "default": "develop@startext.de",
+              "placeholder": "develop@startext.de"
+            },
+            {
+              "application": "application",
+              "key": "spring.mail.password",
+              "title": "SMTP password",
+              "type": "password",
+              "default": "allo"
+            }
+          ]
+        },
+        {
+          "key": "configuration.global.services",
+          "title": "Services",
+          "properties": [
+            {
+              "application": "application",
+              "key": "timetracker.authservice.url",
+              "title": "Auth service URL",
+              "default": "http://authservice:8080/TimeTracker-auth",
+              "placeholder": "http://authservice:8080/TimeTracker-auth"
+            },
+            {
+              "application": "application",
+              "key": "timetracker.reportservice.url",
+              "title": "Report service URL",
+              "default": "http://reportservice:8080/TimeTracker-report",
+              "placeholder": "http://reportservice:8080/TimeTracker-report"
+            },
+            {
+              "application": "application",
+              "key": "TimeTracker.rest.url",
+              "title": "Rest service URL",
+              "default": "http://restservice:8080/TimeTracker-rest",
+              "placeholder": "http://restservice:8080/TimeTracker-rest"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "authservice",
+      "icon": "audio description",
+      "title": "Authservice AD",
+      "forms": [
+        {
+          "key": "timetracker.authservice.activedirectory",
+          "title": "Authservice  AD ",
+          "properties": [
+            {
+              "application": "timetracker.authservice",
+              "key": "activedirectory.url",
+              "title": "Activedirectory controller",
+              "default": "127.0.0.1",
+              "placeholder": "127.0.0.1"
+            },
+            {
+              "application": "timetracker.authservice",
+              "key": "activedirectory.domain",
+              "title": "Activedirectory domain",
+              "default": "localhost",
+              "placeholder": "localhost"
+            },
+            {
+              "application": "timetracker.authservice",
+              "key": "activedirectory.search.filter",
+              "title": "Activedirectory search filter",
+              "default": "filter",
+              "placeholder": "filter"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "reportservice",
+      "icon": "file outline",
+      "title": "Report service",
+      "forms": [
+        {
+          "key": "timetracker.reportservice",
+          "title": "Report service",
+          "properties": [
+            {
+              "application": "application",
+              "key": "timetracker.reportservice.url",
+              "title": "URL",
+              "default": "http://reportservice:8080/TimeTracker-report",
+              "placeholder": "http://reportservice:8080/TimeTracker-report"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "restservice",
+      "icon": "sync",
+      "title": "Rest service",
+      "forms": [
+        {
+          "key": "TimeTracker.rest",
+          "title": "Rest service",
+          "properties": [
+            {
+              "application": "application",
+              "key": "TimeTracker.rest.url",
+              "title": "URL",
+              "default": "http://localhost:8080/TimeTracker-rest",
+              "placeholder": "http://localhost:8080/TimeTracker-rest"
+            }
+          ]
+        },
+        {
+          "key": "TimeTracker.rest.scheduler",
+          "title": "Rest service scheduler",
+          "properties": [
+            {
+              "application": "TimeTracker.rest",
+              "key": "stx.cron.mail.weeklyreport",
+              "title": "Scheduler weeklyreport",
+              "default": "Weeklyreport schedule is not specified.",
+              "placeholder": "Weeklyreport schedule is not specified."
+            },
+            {
+              "application": "TimeTracker.rest",
+              "key": "stx.cron.mail.monthlyreport",
+              "title": "Scheduler monthlyreport",
+              "default": "Monthlyreport schedule is not specified.",
+              "placeholder": "Monthlyreport schedule is not specified."
+            },
+            {
+              "application": "TimeTracker.rest",
+              "key": "stx.cron.mail.annualreport",
+              "title": "Scheduler annualreport",
+              "default": "Annualreport schedule is not specified.",
+              "placeholder": "Annualreport schedule is not specified."
+            }
+          ]
+        },
+        {
+          "key": "TimeTracker.rest.reports",
+          "title": "Rest service reports",
+          "properties": [
+            {
+              "application": "TimeTracker.rest",
+              "key": "stx.services.reportservice.url",
+              "title": "URL",
+              "default": "http://reportservice:8080/TimeTracker-reports",
+              "placeholder": "http://reportservice:8080/TimeTracker-reports"
+            }
+          ]
+        },
+        {
+          "key": "TimeTracker.rest.auth",
+          "title": "Rest service auth",
+          "properties": [
+            {
+              "application": "TimeTracker.rest",
+              "key": "stx.services.authservice.token.url",
+              "title": "Authservice url",
+              "default": "http://username:password@authservice:8080/TimeTracker-auth/oauth/token",
+              "placeholder": "http://username:password@authservice:8080/TimeTracker-auth/oauth/token"
+            },
+            {
+              "application": "TimeTracker.rest",
+              "key": "stx.services.authservice.token.guest.username",
+              "title": "Username",
+              "default": "user",
+              "placeholder": "user"
+            },
+            {
+              "application": "TimeTracker.rest",
+              "key": "stx.services.authservice.token.guest.password",
+              "title": "Guest password",
+              "default": "password",
+              "type": "password",
+              "placeholder": "password"
+            }
+          ]
+        },
+        {
+          "key": "TimeTracker.rest.mail",
+          "title": "Rest service mail",
+          "properties": [
+            {
+              "application": "TimeTracker.rest",
+              "key": "spring.mail.host",
+              "title": "Mail host"
+            },
+            {
+              "application": "TimeTracker.rest",
+              "key": "spring.mail.port",
+              "title": "Mail port"
+            }
+          ]
+        },
+        {
+          "key": "TimeTracker.rest.admin",
+          "title": "Rest service admin conf",
+          "properties": [
+            {
+              "application": "TimeTracker.rest",
+              "key": "stx.timetracker.admin.username",
+              "title": "Username",
+              "default": "admin",
+              "placeholder": "admin"
+            },
+            {
+              "application": "TimeTracker.rest",
+              "key": "stx.timetracker.admin.email",
+              "title": "Email",
+              "default": "admin@startext.ru",
+              "placeholder": "admin@startext.ru"
+            },
+            {
+              "application": "TimeTracker.rest",
+              "key": "stx.timetracker.admin.roles",
+              "title": "Roles",
+              "default": "TimeTracker admins",
+              "placeholder": "TimeTracker admins"
+            }
+          ]
+        },
+        {
+          "key": "TimeTracker.rest.user",
+          "title": "Rest service user roles",
+          "properties": [
+            {
+              "application": "TimeTracker.rest",
+              "key": "stx.timetracker.user.roles",
+              "title": "Roles",
+              "default": "TimeTracker",
+              "placeholder": "TimeTracker"
+            }
+          ]
+        },
+        {
+          "key": "TimeTracker.rest.database",
+          "title": "TimeTracker database",
+          "properties": [
+            {
+              "application": "TimeTracker.rest",
+              "key": "spring.datasource.driverClassName",
+              "title": "JDBC driver class",
+              "default": "org.postgresql.Driver"
+            },
+            {
+              "application": "TimeTracker.rest",
+              "key": "spring.datasource.url",
+              "title": "JDBC URL",
+              "default": ""
+            },
+            {
+              "application": "TimeTracker.rest",
+              "key": "spring.datasource.username",
+              "title": "Database username"
+            },
+            {
+              "application": "TimeTracker.rest",
+              "key": "spring.datasource.password",
+              "type": "password",
+              "title": "Database password"
+            },
+            {
+              "application": "TimeTracker.rest",
+              "key": "spring.jpa.database-platform",
+              "title": "JDBC database platform",
+              "default": "org.hibernate.dialect.PostgreSQLDialect"
+            },
+            {
+              "application": "TimeTracker.rest",
+              "key": "spring.jpa.hibernate.ddl-auto",
+              "title": "DDL auto"
+            },
+            {
+              "application": "TimeTracker.rest",
+              "key": "spring.liquibase.enabled",
+              "title": "Liquibase enabled"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

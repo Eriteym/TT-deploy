@@ -1,0 +1,31 @@
+{
+  "webapp": {
+    "version": "0.0.0"
+  },
+  "services": {
+    "rest": "/ConfigService-rest"
+  },
+  "links": {
+    "home": {
+      "url": "/main/global"
+    },
+    "main": {
+      "url": "/main/:id"
+    },
+    "properties": {
+      "api": {
+        "get": "{REST_URL}/properties",
+        "post": "{REST_URL}/properties"
+      }
+    }
+  },
+  "features": {
+    "checkIP": false,
+    "access" : [
+      "127.0.0.1",
+      "localhost",
+      "10.20.1.0/24",
+      "10.40.1.0/24"
+    ]
+  }
+}

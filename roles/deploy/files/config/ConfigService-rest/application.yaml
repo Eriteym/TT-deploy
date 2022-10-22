@@ -1,0 +1,46 @@
+management.endpoints.jmx.domain: stx.configservice
+endpoints.jmx.domain: stx.configservice
+
+logging.level:
+  root: ${STX_CONFIGSERVICE_LOGGING_LEVEL:INFO}
+
+spring:
+  profiles:
+    active: jdbc,h2-docker
+  jmx:
+    default-domain: sxt.configservice
+  jpa:
+    show-sql: true
+    properties.hibernate:
+      jdbc.lob.non_contextual_creation: true
+      format_sql: true
+  liquibase:
+    change-log: file:///config/liquibase/db.changelog-master.yaml
+  cloud:
+    config.server.jdbc.sql: SELECT key, value FROM configservice_properties WHERE application=? AND profile=? AND label=?
+
+configservice:
+  jpa.table-prefix: ${STX_CONFIGSERVICE_TABLE_PREFIX:ConfigService}
+  security:
+    enabled: ${STX_CONFIGSERVICE_SECURITY_ENABLED:false}
+    user:
+      username: ${STX_CONFIGSERVICE_USER_USERNAME:user}
+      password: ${STX_CONFIGSERVICE_USER_PASSWORD:userPassword}
+    admin:
+      username: ${STX_CONFIGSERVICE_ADMIN_USERNAME:admin}
+      password: ${STX_CONFIGSERVICE_ADMIN_PASSWORD:adminPassword}
+
+---
+spring:
+  profiles: h2-docker
+  datasource:
+    driver-class-name: ${STX_CONFIGSERVICE_DB_DRIVER:org.h2.Driver}
+    url: ${STX_CONFIGSERVICE_DB_URL:jdbc:h2:file:/data/stx-ConfigService}
+    username: ${STX_CONFIGSERVICE_DB_USERNAME:sa}
+    password: ${STX_CONFIGSERVICE_DB_PASSWORD:}
+  jpa:
+    database-platform: ${STX_CONFIGSERVICE_DB_PLATFORM:org.hibernate.dialect.H2Dialect}
+    hibernate:
+      ddl-auto: ${STX_CONFIGSERVICE_DB_DDL_AUTO:update}
+#  liquibase:
+#    enabled: false

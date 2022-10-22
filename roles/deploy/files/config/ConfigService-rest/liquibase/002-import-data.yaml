@@ -1,0 +1,31 @@
+---
+databaseChangeLog:
+- changeSet:
+    id: config_service_data_001
+    author: Alexey Ukhov <auk@startext.ru>
+    changes:
+      - loadUpdateData:
+          columns:
+            - column:
+                name: id
+                type: STRING
+            - column:
+                name: application
+                type: STRING
+            - column:
+                name: profile
+                type: STRING
+            - column:
+                name: label
+                type: STRING
+            - column:
+                name: key
+                type: STRING
+            - column:
+                name: value
+                type: STRING
+          encoding: UTF-8
+          file: data/001-backend_config.csv
+          relativeToChangelogFile: true
+          primaryKey: id
+          tableName: configservice_properties

@@ -1,0 +1,32 @@
+---
+databaseChangeLog:
+- changeSet:
+    id: 2019012901
+    author: Alexey Ukhov <auk@startext.ru>
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              primaryKey: true
+            name: ID
+            type: VARCHAR2(36)
+        - column:
+            name: APPLICATION
+            type: VARCHAR2(255)
+        - column:
+            name: PROFILE
+            type: VARCHAR2(255)
+        - column:
+            name: LABEL
+            type: VARCHAR2(255)
+        - column:
+            name: KEY
+            type: VARCHAR2(255)
+        - column:
+            name: VALUE
+            type: VARCHAR2(1024)
+        - column:
+            name: DESCRIPTION
+            type: VARCHAR2(4000)
+        tableName: CONFIGSERVICE_PROPERTIES

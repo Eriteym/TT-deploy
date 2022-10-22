@@ -1,0 +1,3 @@
+DNAME="CN=Alexey Ukhov,OU=startext Tomsk,O=startext GmbH,L=Tomsk,ST=Tomsk region,C=RU"
+KEYSTORE_PASS=PASSWORD_HERE
+KEYPASS_AUTHSERVICE=PASSWORD_HERE

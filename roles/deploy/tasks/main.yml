@@ -1,0 +1,80 @@
+- name: Run a shell command and find home folder
+  shell: "echo ~{{ deploy_user }}"
+  register: HOME_FOLDER
+
+- debug:
+    msg: "Home folder - '{{ HOME_FOLDER.stdout }}', application folder: '{{ application_root }}'', deploy user: '{{ deploy_user }}'', debug: '{{ debug }}'"
+- debug:
+    msg: "Use Traefik - '{{ use_traefik }}', use https: '{{ use_https }}'"
+- debug:
+    msg: "Debug mode:  '{{ debug }}', local images: '{{ local_image }}'"
+- debug:
+    msg: "Docker image pull: '{{ docker_image_pull }}'"
+
+
+# Prepare files
+
+- name: Ensure directory structure exists for files
+  file:
+    path: '{{ application_root }}/{{ item.path }}'
+    state: directory
+  with_filetree: '{{ role_path }}/files'
+  when: item.state == 'directory'
+
+- name: Ensure files are populated from files
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ application_root }}/{{ item.path }}'
+  with_filetree: '{{ role_path }}/files'
+  when: item.state == 'file'
+
+- include: config_files.yml
+
+# Prepare templates
+
+- name: Ensure directory structure exists for templates
+  file:
+    path: '{{ application_root }}/{{ item.path }}'
+    state: directory
+  with_filetree: '{{ role_path }}/templates'
+  when: item.state == 'directory'
+
+- name: Ensure files are populated from templates
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ application_root }}/{{ item.path }}'
+  with_filetree: '{{ role_path }}/templates'
+  when: item.state == 'file' and not(item.path.endswith('.inc'))
+
+- debug:
+    msg: "Docker registry - {{ lookup('env', 'CI_REGISTRY') or 'registry.startext.dev' }}"
+
+- debug:
+    msg: "Docker username - {{ lookup('env', 'REGISTRY_USER') or 'gitlab-ci-token' }}"
+
+- debug:
+    msg: "Docker password - {{ lookup('env', 'CI_JOB_TOKEN') or lookup('env', 'REGISTRY_TOKEN') }}"
+
+- name: login to docker registry
+  docker_login:
+    registry: "{{ lookup('env', 'CI_REGISTRY') or 'registry.startext.dev' }}"
+    username: "{{ lookup('env', 'REGISTRY_USER') or 'gitlab-ci-token' }}"
+    password: "{{ lookup('env', 'CI_JOB_TOKEN') or lookup('env', 'REGISTRY_TOKEN') }}"
+  when: lookup('env', 'CI_JOB_TOKEN') or lookup('env', 'REGISTRY_USER')
+
+- name: start docker-compose stack
+  docker_compose:
+    project_src: "{{ application_root }}"
+    pull: '{{ docker_image_pull }}'
+    state: present
+    restarted: yes
+
+# - name: clean up after application spin up (prune everything including non-dangling images)
+#   docker_prune:
+#     containers: yes
+#     images: yes
+#     images_filters:
+#       dangling: false
+#     networks: yes
+#     volumes: yes
+#     builder_cache: yes

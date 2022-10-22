@@ -1,0 +1,73 @@
+current_user: "{{ lookup('pipe', 'id -n -u') }}"                    # this is LOCAL user
+deploy_user: "{{ lookup('env', 'DEPLOY_USER') or current_user }}"
+project_name: "{{ lookup('env', 'CI_PROJECT_NAME') or 'TimeTracker' }}"
+application_root: "{{ HOME_FOLDER.stdout }}/docker/{{ project_name }}"     # here we use REMOTE home folder
+
+# use options
+use_traefik: "{{ lookup('env', 'USE_TRAEFIK')|bool or true }}"
+use_monitoring: "{{ lookup('env', 'USE_MONITORING')|bool or false }}"
+use_https: "{{ lookup('env', 'USE_HTTPS')|bool or false }}"
+
+# Active Directory conf
+ad_host: "{{ lookup('env', 'AD_HOST') or '10.40.1.40' }}"
+ad_domain: "{{ lookup('env', 'AD_DOMAIN') or 'ad.startext.ru' }}"
+ad_app_name: "{{ lookup('env', 'AD_APP_NAME') or 'timetracker.authservice' }}"
+ad_configservice_url: "{{ lookup('env', 'AD_CONFIGSERVICE_URL') or 'http://configservice:8080/ConfigService-rest' }}"
+
+# passwords
+jwt_keystore_password: "{{ jwt_keystore_password_output.stdout }}"
+jwt_key_password: "{{ jwt_key_password_output.stdout }}"
+
+# docker variables
+docker_image_tag: "{{ lookup('env', 'DOCKER_TAG') or 'develop' }}"
+docker_image_pull: "{{ 'no' if local_image else 'yes' }}"
+docker_image_authservice: "{{ 'startext/services/authservice-activedirectory' if local_image else 'registry.startext.dev/services/security/authservice-activedirectory:' + docker_image_tag }}"
+docker_image_frontend: "{{ 'timetracker/timetracker/frontend' if local_image else 'registry.startext.dev/timetracker/timetracker/frontend:' + docker_image_tag }}"
+docker_image_reportservice: "{{ 'startext/services/reportservice' if local_image else 'registry.startext.dev/services/reportservice:' + docker_image_tag }}"
+docker_image_restservice: "{{ 'timetracker/timetracker/rest' if local_image else 'registry.startext.dev/timetracker/timetracker/rest:' + docker_image_tag }}"
+docker_image_configservice: "registry.startext.dev/services/configservice:develop"
+
+# PostgreSQL configuration
+postgres_password: "{{ lookup('env', 'POSTGRES_PASSWORD') or 'no-password-specified-RobhiMakCiajPyt3' }}"
+tt_db_username: "{{ lookup('env', 'TT_DB_USERNAME') or 'timetracker' }}" 
+
+# Docker expose ports
+authservice_port: "{{ lookup('env', 'AUTHSERVICE_PORT') or '127.0.0.1:8082' if use_traefik else '8082' }}"
+postgres_port: "{{ lookup('env', 'POSTGRES_PORT') or '127.0.0.1:5432' }}"
+frontend_port: "{{ lookup('env', 'FRONTEND_PORT') or '127.0.0.1:3001' if use_traefik else '3001' }}"
+reportservice_port: "{{ lookup('env', 'REPORTSERVICE_PORT') or '127.0.0.1:8083' if use_traefik else '8083' }}"
+restservice_port: "{{ lookup('env', 'RESTSERVICE_PORT') or '127.0.0.1:8084' if use_traefik else '8084' }}"
+configservice_port: "{{ lookup('env', 'CONFIGSERVICE_PORT') or '127.0.0.1:8092' if use_traefik else '8092' }}"
+
+# Docker expose debug ports
+authservice_debug_port: "{{ lookup('env', 'AUTHSERVICE_DEBUG_PORT') or '5005' }}"
+reportservice_debug_port: "{{ lookup('env', 'REPORTSERVICE_DEBUG_PORT') or  '5006' }}"
+restservice_debug_port: "{{ lookup('env', 'RESTSERVICE_DEBUG_PORT') or '5007' }}"
+
+# Traefik configuration
+traefik_application_label: timetracker
+traefik_manage_port: "{{ lookup('env', 'TRAEFIK_MANAGE_PORT') or '127.0.0.1:1081' }}"
+traefik_http_port: "{{ lookup('env', 'TRAEFIK_HTTP_PORT') or '80' }}"
+
+traefik_tt_domain: "{{ lookup('env', 'TT_DOMAIN') or 'tt.localhost' }}"
+traefik_tt_host: "{{ lookup('env', 'TT_HOST') or  traefik_tt_domain }}"
+
+traefik_authservice_path: '/TimeTracker-auth'
+traefik_reportservice_path: '/TimeTracker-report'
+traefik_restservice_path: '/TimeTracker-rest'
+traefik_configservice_path: '/ConfigService'
+
+http_protocol: "{{ 'https' if use_https else 'http'}}"
+
+authservice_url: "{{ http_protocol }}://{{ traefik_tt_host + traefik_authservice_path if use_traefik else deploy_server + ':' + authservice_port + traefik_authservice_path }}"
+reportservice_url: "{{ http_protocol }}://{{ traefik_tt_host + traefik_reportservice_path if use_traefik else deploy_server + ':' + reportservice_port + traefik_reportservice_path }}"
+restservice_url: "{{ http_protocol }}://{{ traefik_tt_host + traefik_restservice_path if use_traefik else deploy_server + ':' + restservice_port + traefik_restservice_path }}"
+
+# TimeTracker-rest conf
+cron_weeklyreport: "{{ lookup('env', 'CRON_WEEKLYREPORT') or '0 0 12 ? * MON' }}"
+cron_monthlyreport: "{{ lookup('env', 'CRON_MONTHLYREPORT') or '0 0 13 1 * ?' }}"
+cron_annualreport: "{{ lookup('env', 'CRON_ANNUALREPORT') or '0 0 14 1 1 ?' }}"
+tt_admin_username: "{{ lookup('env', 'TT_ADMIN_USERNAME') or 'admin' }}"
+tt_admin_email: "{{ lookup('env', 'TT_ADMIN_EMAIL') or 'admin@startext.ru' }}"
+spring_profiles: "{{ lookup('env', 'SPRING_PROFILES') or 'postgresql' }}"
+

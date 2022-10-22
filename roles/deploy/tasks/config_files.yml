@@ -1,0 +1,54 @@
+---
+
+# Prepare config files
+
+- stat: path={{ application_root }}/config/authservice/jwt.conf
+  register: jwt_conf_file
+
+- name: Create 'config/authservice/jwt.conf' file
+  shell: |
+    bash {{ application_root }}/bin/jwt.create_config.sh
+    rm -rf {{ application_root }}/config/authservice/keystore.*
+    exit 0
+  when: jwt_conf_file.stat.exists == False
+
+- name: Extract keystore password from jwt.conf
+  shell: grep KEYSTORE_PASS {{ application_root }}/config/authservice/jwt.conf | awk -F '=' '{print $2;}'
+  register: jwt_keystore_password_output
+
+# - debug:
+#     msg: "JWT keystore password output - {{ jwt_keystore_password_output }}"
+
+- name: Extract key password from jwt.conf
+  shell: grep KEYPASS_AUTHSERVICE {{ application_root }}/config/authservice/jwt.conf | awk -F '=' '{print $2;}'
+  register: jwt_key_password_output
+
+# - debug:
+#     msg: "JWT key password output - {{ jwt_key_password_output }}"
+
+- stat: path={{ application_root }}/config/authservice/keystore.jks
+  register: jwt_keystore_jks_file
+
+- name: Create 'config/authservice/keystore.jks' file
+  shell: |
+    bash {{ application_root }}/bin/jwt.generate_cert.sh
+    rm -rf {{ application_root }}/config/authservice/keystore.pub
+    exit 0
+  # register: create_keystore_output
+  ignore_errors: yes
+  when: jwt_keystore_jks_file.stat.exists == False
+
+# - debug:
+#     msg: "Create keystore output - {{ create_keystore_output }}"
+
+- stat: path={{ application_root }}/config/authservice/keystore.pub
+  register: jwt_keystore_pub_file
+
+- name: Create 'config/authservice/keystore.pub' file
+  shell: bash {{ application_root }}/bin/jwt.extract_public_cert.sh
+  # register: create_keystore_pub_output
+  ignore_errors: yes
+  when: jwt_keystore_pub_file.stat.exists == False
+
+# - debug:
+#     msg: "Create keystore.pub output - {{ create_keystore_pub_output }}"

@@ -1,0 +1,164 @@
+version: "3.5"
+
+services:
+  authservice:
+    image: {{ docker_image_authservice }}
+    restart: always
+    networks:
+      - timetracker
+    depends_on:
+      - configservice
+    ports:
+      - "{{ authservice_port }}:8080"
+{% if debug %}
+      - "{{authservice_debug_port}}:5005"
+{% endif %}
+    env_file:
+      - .env_authservice
+    environment:
+      - AUTHSERVICE_AD_CONTEXT_PATH={{traefik_authservice_path}}
+      - AUTHSERVICE_AD_APPLICATION_NAME={{ad_app_name}}
+      - AUTHSERVICE_AD_CONFIGSERVICE_URL={{ad_configservice_url}}
+{% if debug %}
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+{% endif %}
+    volumes:
+      - ./config/authservice/keystore.jks:/keystore.jks
+{% if use_traefik %}
+    labels:
+      - traefik.application={{ traefik_application_label }}
+      - traefik.http.routers.timetracker_authservice.rule=Host(`{{ traefik_tt_host }}`) && PathPrefix(`{{traefik_authservice_path}}`)
+      - traefik.http.routers.timetracker_authservice.entrypoints=web
+{% endif %}
+
+  configservice:
+    image: {{ docker_image_configservice }}
+    restart: always
+    networks:
+      - timetracker
+    ports:
+      - "{{ configservice_port }}:8080"
+{% if use_traefik %}
+    labels:
+      - traefik.application={{ traefik_application_label }}
+      - traefik.http.routers.timetracker_configservice.rule=Host(`{{ traefik_tt_host }}`) && PathPrefix(`{{traefik_configservice_path}}`)
+      - traefik.http.routers.timetracker_configservice.entrypoints=web
+{% endif %}
+    volumes:
+      - ./config/ConfigService-frontend/config.prod.json:/usr/local/tomcat/webapps/ConfigService/config.prod.json:ro
+      - ./config/ConfigService-frontend/fields-definition.json:/usr/local/tomcat/webapps/ConfigService/fields-definition.json:ro
+      - ./config/ConfigService-rest/application.yaml:/usr/local/tomcat/webapps/ConfigService-rest/WEB-INF/classes/application.yaml:ro
+      - ./config/ConfigService-rest:/config:ro
+      - /etc/localtime:/etc/localtime:ro
+      - configservice-data:/data
+
+  frontend:
+    image: {{ docker_image_frontend }}
+    restart: always
+    ports:
+      - "{{ frontend_port }}:80"
+    networks:
+      - timetracker
+    depends_on:
+      - authservice
+      - restservice
+      - reportservice
+    volumes:
+      - ./config/frontend/config.json:/usr/share/nginx/html/TimeTracker/config.json
+{% if use_traefik %}
+    labels:
+      - traefik.application={{ traefik_application_label }}
+      - traefik.http.routers.timetracker_frontend.rule=Host(`{{ traefik_tt_host }}`)
+      - traefik.http.routers.timetracker_frontend.entrypoints=web
+{% endif %}
+
+  reportservice:
+    image: {{ docker_image_reportservice }}
+    restart: always
+    depends_on:
+      - configservice
+      - postgresql
+    ports:
+      - "{{ reportservice_port }}:8080"
+{% if debug %}
+      - "{{reportservice_debug_port}}:5005"
+{% endif %}
+    networks:
+      - timetracker
+    env_file:
+      - .env_reportservice
+    environment:
+      - STX_REPORTSERVICE_CONTEXT_PATH={{traefik_reportservice_path}}
+{% if debug %}
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+{% endif %}
+{% if use_traefik %}
+    labels:
+      - traefik.application={{ traefik_application_label }}
+      - traefik.http.routers.timetracker_reportservice.rule=Host(`{{ traefik_tt_host }}`) && PathPrefix(`{{traefik_reportservice_path}}`)
+      - traefik.http.routers.timetracker_reportservice.entrypoints=web
+{% endif %}
+    volumes:
+      - ./config/authservice/keystore.pub:/keystore.pub:ro
+
+  restservice:
+    image: {{ docker_image_restservice }}
+    restart: always
+    depends_on:
+      - configservice
+      - postgresql
+      - reportservice
+    ports:
+      - "{{ restservice_port }}:8080"
+{% if debug %}
+      - "{{restservice_debug_port}}:5005"
+{% endif %}
+    env_file:
+      - .env_timetracker_rest
+    environment:
+      - TIMETRACKER_REST_CONTEXT_PATH={{traefik_restservice_path}}
+{% if debug %}
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+{% endif %}
+
+    volumes:
+      - ./config/authservice/keystore.pub:/keystore.pub:ro
+      - ./config/rest/csv/010-insert-workspace_feature_properties_default.csv:/usr/local/tomcat/webapps/TimeTracker-rest/WEB-INF/classes/db/csv/010-insert-workspace_feature_properties_default.csv
+{% if use_traefik %}
+    labels:
+      - traefik.application={{ traefik_application_label }}
+      - traefik.http.routers.timetracker_restservice.rule=Host(`{{ traefik_tt_host }}`) && PathPrefix(`{{traefik_restservice_path}}`)
+      - traefik.http.routers.timetracker_restservice.entrypoints=web
+{% endif %}
+    networks:
+      - timetracker
+
+  postgresql:
+    image: postgres:12
+    restart: always
+    env_file:
+      - .env_postgresql
+    networks:
+      - timetracker
+    ports:
+      - {{ postgres_port }}:5432
+    volumes:
+      - ./config/postgresql/initdb.d:/docker-entrypoint-initdb.d:ro
+      - postgresql-data:/var/lib/postgresql/data
+      - postgresql-logs:/var/log/postgresql
+
+{% if use_traefik %}
+{% include "docker-compose.traefik.yaml.inc" %}
+{% endif %}
+
+{% if use_monitoring %}
+{% include "docker-compose.monitoring.yaml.inc" %}
+{% endif %}
+
+networks:
+  timetracker:
+
+volumes:
+  postgresql-data:
+  postgresql-logs:
+  configservice-data:

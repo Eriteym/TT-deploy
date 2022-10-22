@@ -1,0 +1,43 @@
+id,application,profile,label,key,value,description
+# global application properties,,,,,,
+0a8f9456-fd19-486d-8b44-ecfb892ab1d1,application,default,master,spring.mail.host,mail.startext.dev,
+64367614-8845-439c-b6dd-a4feb52c73a7,application,default,master,spring.mail.username,mail@startext.dev,
+d0615efe-bf63-4b49-9f01-2991a0d891cd,application,default,master,spring.mail.password,smtp_password,
+08ed778e-3703-40a6-8b41-d7e9b256ad92,application,default,master,spring.mail.port,465,
+9eccdab1-c5bf-4ed7-8005-a645a463586e,application,default,master,spring.mail.properties.mail.from,mail@startext.dev,
+7f039a9e-08ea-4c53-bb93-c40f214dbbc5,application,default,master,spring.mail.properties.mail.smtp.auth,true,
+30ae5487-349a-47c2-af00-e8ba56fc879d,application,default,master,spring.mail.properties.mail.smtp.ssl.enable,true,
+8e26fdaf-66dd-4066-bc2a-67b57ddc638c,application,default,master,spring.mail.properties.mail.smtp.starttls.enabled,false,
+5f3716ea-53de-4d30-85f7-0bbeb57fsd2d,application,default,master,timetracker.authservice.url,{{ authservice_url }},http://authservice:8080/TimeTracker-auth
+5f3716ea-53de-4d30-85f7-0bbeb57ed2dd,application,default,master,timetracker.reportservice.url,{{ reportservice_url }},http://reportservice:8080/TimeTracker-report
+27fa6cab-18dc-49f2-9986-d302256b8714,application,default,master,TimeTracker.rest.url,{{ restservice_url }},http://restservice:8080/TimeTracker-rest
+# Authservice ad service conf,,,,,,
+0b99481a-a902-11ec-b909-0242ac1200QT,{{ad_app_name}},default,master,activedirectory.url,ldap://{{ ad_host }},Controller (IP) ad server
+0b994aae-a902-11ec-b909-0242ac1200QE,{{ad_app_name}},default,master,activedirectory.domain,{{ ad_domain }},domain AD
+0b994bf8-a902-11ec-b909-0242ac12EDSe,{{ad_app_name}},default,master,activedirectory.search.filter,,search filter for AD groups
+# Report service conf,,,,,,
+5f3716ea-53de-4d30-85f7-0bbeb57ed2QR,timetracker.reportservice,default,master,timetracker.reportservice.url,{{ reportservice_url }},http://reportservice:8080/TimeTracker-report
+# Rest service conf,,,,,,
+5f3716ea-53de-4d30-85f7-0bbeb57ed2QY,TimeTracker.rest,default,master,TimeTracker.rest.url,{{ restservice_url }},http://restservice:8080/TimeTracker-rest
+0b99481a-a902-11ec-b909-0242ac120002,TimeTracker.rest,default,master,stx.cron.mail.weeklyreport,{{cron_weeklyreport}},'0 0/10 * * * *' or '-' for disabling schedule
+0b994aae-a902-11ec-b909-0242ac120002,TimeTracker.rest,default,master,stx.cron.mail.monthlyreport,{{cron_monthlyreport}},'0 0/10 * * * *' or '-' for disabling schedule
+0b994bf8-a902-11ec-b909-0242ac120002,TimeTracker.rest,default,master,stx.cron.mail.annualreport,{{cron_annualreport}},'0 0/10 * * * *' or '-' for disabling schedule
+0b994bf8-a902-11ec-b909-0242ac1200QQ,TimeTracker.rest,default,master,stx.services.reportservice.url,http://reportservice:8080{{traefik_reportservice_path}},http://reportservice:8080/TimeTracker-report
+0b994bf8-a902-11ec-b909-0242ac1200QW,TimeTracker.rest,default,master,stx.services.authservice.token.url,http://authservice:IpDegBarwut8@authservice:8080{{traefik_authservice_path}}/oauth/token,http://authservice:IpDegBarwut8@authservice:8080/TimeTracker-auth/oauth/token
+0b994bf8-a902-11ec-b909-0242ac1200QZ,TimeTracker.rest,default,master,stx.services.authservice.token.guest.username,test,test
+0b994bf8-a902-11ec-b909-0242ac1200QR,TimeTracker.rest,default,master,stx.services.authservice.token.guest.password,stx70Test,stx70Test
+0b994bf8-a902-11ec-b909-0242ac1200QC,TimeTracker.rest,default,master,stx.timetracker.admin.username,{{tt_admin_username}},admin
+0b994bf8-a902-11ec-b909-0242ac12ER31,TimeTracker.rest,default,master,stx.timetracker.admin.email,{{tt_admin_email}},admin@startext.ru
+0b994bf8-a902-11ec-b909-0242ac1200QY,TimeTracker.rest,default,master,stx.timetracker.admin.roles[0],TimeTracker admins,TimeTracker admins
+0b994bf8-a902-11ec-b909-0242ac1200QU,TimeTracker.rest,default,master,stx.timetracker.admin.roles[1],admin,TimeTracker admins
+0b994bf8-a902-11ec-b909-0242acWERC13,TimeTracker.rest,default,master,stx.timetracker.user.roles[0],TimeTracker,TimeTracker
+0b994bf8-a902-11ec-b909-0242acWERC14,TimeTracker.rest,default,master,stx.timetracker.user.roles[1],TimeTracker user,TimeTracker
+0b994bf8-a902-11ec-b909-0242ac12VF42,TimeTracker.rest,postgresql,master,spring.datasource.driverClassName,org.postgresql.Driver,org.postgresql.Driver
+0b994bf8-a902-11ec-b909-0242ac12RT42,TimeTracker.rest,postgresql,master,spring.datasource.url,jdbc:postgresql://postgresql:5432/timetracker,jdbc:postgresql://postgresql:5432/timetracker
+0b994bf8-a902-11ec-b909-0242ac1254ER,TimeTracker.rest,postgresql,master,spring.jpa.database-platform,org.hibernate.dialect.PostgreSQLDialect,org.hibernate.dialect.PostgreSQLDialect
+0b994bf8-a902-11ec-b909-0242ac1267RR,TimeTracker.rest,postgresql,master,spring.jpa.hibernate.ddl-auto,validate,validate
+0b994bf8-a902-11ec-b909-0242ac12Wld4,TimeTracker.rest,postgresql,master,spring.datasource.username,{{tt_db_username}},timetracker
+0b994bf8-a902-11ec-b909-0242ac12WQ14,TimeTracker.rest,postgresql,master,spring.datasource.password,{{postgres_password}},timetracker
+0b994bf8-a902-11ec-b909-0242ac12ER24,TimeTracker.rest,postgresql,master,spring.liquibase.enabled,true,true
+0b994bf8-a902-11ec-b909-0242acZCDT41,TimeTracker.rest,default,master,spring.mail.host,10.40.8.5,10.40.8.5
+0b994bf8-a902-11ec-b909-0242actytgD4,TimeTracker.rest,default,master,spring.mail.port,25,25

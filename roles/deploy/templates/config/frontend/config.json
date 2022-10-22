@@ -1,0 +1,14 @@
+{
+  "webapp": {
+    "version": {
+      "application": "1.4.0.0",
+      "frontend": "",
+      "auth": "",
+      "rest": ""
+    }
+  },
+  "services": {
+    "auth": "{{authservice_url}}",
+    "rest": "{{restservice_url}}/api/v1"
+  }
+}
